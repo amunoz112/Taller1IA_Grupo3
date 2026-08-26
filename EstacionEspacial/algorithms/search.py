@@ -2,6 +2,7 @@ from algorithms.problems import SearchProblem
 import algorithms.utils as utils
 from world.game import Directions
 from algorithms.heuristics import nullHeuristic
+from algorithms.utils import Queue
 
 
 def tinyDiagnosticSearch(problem: SearchProblem):
@@ -37,7 +38,27 @@ def breadthFirstSearch(problem: SearchProblem):
     Search the shallowest nodes in the search tree first.
     """
     # TODO: Add your code here
-    utils.raiseNotDefined()
+    inicio = problem.getStartState()
+    cola  = Queue()
+    visitados = set()
+    visitados.add(inicio)
+    cola.push((inicio,[]))
+    
+    while not cola.isEmpty():
+        estado, camino = cola.pop()
+        
+        if problem.isGoalState(estado):
+            return camino
+        
+        vecinos = problem.getSuccessors(estado)
+        
+        for succesor, accion, costo in vecinos:
+            if succesor not in visitados:
+                visitados.add(succesor)
+                nuevoCamino = camino + [accion]
+                cola.push((succesor, nuevoCamino))
+        
+    return []
 
 
 def uniformCostSearch(problem: SearchProblem):
