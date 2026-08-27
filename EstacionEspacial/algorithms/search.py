@@ -30,6 +30,27 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     # TODO: Add your code here
+    visitados = set()
+    pila = utils.Stack()
+    estadoInicial = problem.getStartState()
+    pila.push((estadoInicial, []))
+    while not pila.isEmpty():
+        nodo, camino = pila.pop()
+
+        if nodo in visitados:
+            continue
+
+        visitados.add(nodo)
+
+        if problem.isGoalState(nodo):
+            return camino
+
+        for sucesor, accion, costo in problem.getSuccessors(nodo):
+            if sucesor not in visitados:
+                nuevoCamino = camino + [accion]
+                pila.push((sucesor, nuevoCamino))
+
+    return []
     utils.raiseNotDefined()
 
 
