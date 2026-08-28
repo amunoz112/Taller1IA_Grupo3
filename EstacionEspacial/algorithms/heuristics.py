@@ -54,8 +54,27 @@ def euclideanHeuristic(state, problem):
     - C if all systems have been repaired.
     """
     # TODO: Add your code here
-    utils.raiseNotDefined()
-
+    position, hasKit, pendingSystems = state
+    
+    if not hasKit:
+        objetivo= problem.kitPosition
+        
+    if hasKit and len(pendingSystems) >0:
+        menorDistancia = float('inf')
+        
+        for sistema in pendingSystems:
+            disntacia = ((position[0] - sistema[0])**2 + (position[1] - sistema[1])**2)**0.5
+                
+            if disntacia < menorDistancia:
+                menorDistancia = disntacia
+                objetivo = sistema
+                
+    if hasKit and len(pendingSystems) == 0:
+        objetivo = problem.controlPosition
+        
+    disntacia = ((position[0] - objetivo[0])**2 + (position[1] - objetivo[1])**2)**0.5
+    
+    return disntacia
 
 def systemRepairHeuristic(
     state: Tuple[Tuple, bool, Tuple], problem: SystemRepairProblem
@@ -75,4 +94,33 @@ def systemRepairHeuristic(
     - Balance heuristic strength vs. computation time (do experiments!)
     """
     # TODO: Add your code here
-    utils.raiseNotDefined()
+    position, hasKit, pendingSystems = state
+
+    def distancia(a, b):
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+    if hasKit and len(pendingSystems) == 0:
+        return distancia(position, problem.controlPosition)
+
+    if not hasKit:
+        distanciaKit = distancia(position, problem.kitPosition)
+        menorSistema = float('inf')
+
+        for sistema in pendingSystems:
+            d = distancia(problem.kitPosition, sistema)
+
+            if d < menorSistema:
+                menorSistema = d
+
+        return distanciaKit + menorSistema
+
+    if hasKit and len(pendingSystems) > 0:
+        menorSistema = float('inf')
+
+        for sistema in pendingSystems:
+            d = distancia(position, sistema)
+
+            if d < menorSistema:
+                menorSistema = d
+
+        return menorSistema
