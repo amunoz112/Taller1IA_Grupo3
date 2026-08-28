@@ -3,6 +3,7 @@ import algorithms.utils as utils
 from world.game import Directions
 from algorithms.heuristics import nullHeuristic
 from algorithms.utils import Queue
+from algorithms.utils import PriorityQueue
 
 
 def tinyDiagnosticSearch(problem: SearchProblem):
@@ -96,7 +97,39 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     Search the node that has the lowest combined cost and heuristic first.
     """
     # TODO: Add your code here
-    utils.raiseNotDefined()
+    inicio = problem.getStartState() #iniciamos 
+    cola = PriorityQueue()
+    
+    mejorCosto = {}  
+    mejorCosto[inicio] = 0
+    
+    costoInicial = 0
+    prioridad = costoInicial + heuristic(inicio, problem) # f(n)=g+h
+    
+    cola.push((inicio, [], 0), heuristic(inicio, problem))
+    
+    while not cola.isEmpty():
+        estado, camino, costo = cola.pop()
+        
+        if problem.isGoalState(estado):
+            return camino
+        
+        vecinos = problem.getSuccessors(estado)
+        
+        for sucesor, accion, costoPaso in vecinos:
+            
+            nuevoCosto = costo + costoPaso
+            
+            if sucesor not in mejorCosto or nuevoCosto < mejorCosto[sucesor]:
+                
+                mejorCosto[sucesor] = nuevoCosto
+                
+                nuevoCamino = camino + [accion]
+                
+                prioridad = nuevoCosto + heuristic(sucesor, problem)
+                
+                cola.push((sucesor, nuevoCamino, nuevoCosto), prioridad)
+    return []
 
 
 # Abbreviations (you can use them for the -f option in main.py)
