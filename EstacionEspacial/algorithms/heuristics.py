@@ -76,9 +76,7 @@ def euclideanHeuristic(state, problem):
     
     return disntacia
 
-def systemRepairHeuristic(
-    state: Tuple[Tuple, bool, Tuple], problem: SystemRepairProblem
-):
+def systemRepairHeuristic(state: Tuple[Tuple, bool, Tuple], problem: SystemRepairProblem):
     """
     Your heuristic for the SystemRepairProblem.
 
